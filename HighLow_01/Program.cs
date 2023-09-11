@@ -20,6 +20,9 @@ namespace HighLow_01
             string exit = "";
             bool success = false;
             int input = 0;
+            int counterSameGuess;
+            int counterWrongGuess;
+            int previousAnswer = 0;
 
             while (exit != "0")
             {
@@ -30,6 +33,8 @@ namespace HighLow_01
                 //Generate random number to guess
                 Random rand = new Random();
                 int num = rand.Next(1, 11);
+                counterSameGuess = 0;
+                counterWrongGuess = 0;
 
                 do
                 {
@@ -53,6 +58,16 @@ namespace HighLow_01
                     }
                     while (!success);
 
+                    /*Checks to see if input is the same as the previous input.
+                     If so, increses a counter by 1. If counter reaches 3, game ends.*/
+                    if (input == previousAnswer)
+                    {
+                        counterSameGuess++;
+                    }
+                    else
+                    {
+                        counterSameGuess = 0;
+                    }
                     /*Compare user input to randomly generated number and print whether
                      they guessed the number correctly or if the random number is 
                      higher or lower than their guess.*/
@@ -64,16 +79,27 @@ namespace HighLow_01
                     else if (num > input)
                     {
                         Console.WriteLine("Higher");
+                        counterWrongGuess++;
                         success = false;
                     }
                     else
                     {
                         Console.WriteLine("Lower");
+                        counterWrongGuess++;
                         success = false;
                     }
+                    previousAnswer = input;
                 }
-                while (!success);
-                Console.WriteLine("Press 0 to exit otherwise any key to play again.");
+                while (!success && counterSameGuess < 2 && counterWrongGuess < 5);
+                if (counterWrongGuess == 5)
+                {
+                    Console.WriteLine("**Too many wrong guesses**");
+                }
+                if (counterSameGuess == 2)
+                {
+                    Console.WriteLine("**Same number guessed too many times**");
+                }
+                Console.WriteLine("Press 0 to exit otherwise any key to try again.");
                 exit = Console.ReadLine();
             }
             Divider();
